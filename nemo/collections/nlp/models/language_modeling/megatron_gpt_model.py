@@ -39,8 +39,8 @@ from nemo.collections.nlp.data.language_modeling.megatron.gpt_fim_dataset import
     is_dataset_built_on_rank,
 )
 from nemo.collections.nlp.models.language_modeling.megatron.falcon.falcon_spec import get_falcon_layer_spec
-from nemo.collections.nlp.models.language_modeling.megatron.model_specs import get_gpt_layer_ammo_spec
 from nemo.collections.nlp.models.language_modeling.megatron.gpt_model import GPTModel
+from nemo.collections.nlp.models.language_modeling.megatron.model_specs import get_gpt_layer_ammo_spec
 from nemo.collections.nlp.models.language_modeling.megatron_base_model import MegatronBaseModel
 from nemo.collections.nlp.modules.common.megatron.build_model import build_model
 from nemo.collections.nlp.modules.common.megatron.module import Float16Module
