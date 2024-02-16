@@ -39,6 +39,7 @@ from nemo.collections.nlp.data.language_modeling.megatron.gpt_fim_dataset import
     is_dataset_built_on_rank,
 )
 from nemo.collections.nlp.models.language_modeling.megatron.falcon.falcon_spec import get_falcon_layer_spec
+from nemo.collections.nlp.models.language_modeling.megatron.model_specs import get_gpt_layer_ammo_spec
 from nemo.collections.nlp.models.language_modeling.megatron.gpt_model import GPTModel
 from nemo.collections.nlp.models.language_modeling.megatron_base_model import MegatronBaseModel
 from nemo.collections.nlp.modules.common.megatron.build_model import build_model
@@ -136,6 +137,8 @@ def get_specs(spec_name, num_experts=None):
             return get_gpt_layer_with_transformer_engine_spec()
     elif spec_name == 'megatron_falcon_gpt':
         return get_falcon_layer_spec()
+    elif spec_name == "ammo":
+        return get_gpt_layer_ammo_spec()
     else:
         raise ValueError(f"Spec name '{spec_name}' is not recognized.")
 
@@ -1070,6 +1073,10 @@ class MegatronGPTModel(MegatronBaseModel, TextGeneration):
                 else:
                     extra_arg['set_inference_key_value_memory'] = set_inference_key_value_memory[0].item()
                     extra_arg['inference_max_sequence_len'] = inference_max_sequence_len[0].item()
+            # Currently for all MCore transformer layer specs causal attention mask
+            # is used so we can delegate creating it to MCore by passing None below
+            if isinstance(model, MCoreGPTModel):
+                attention_mask = None
             output_tensor = model(tokens, position_ids, attention_mask, **extra_arg)
 
             # Advance inference sequence offset.
